@@ -1,84 +1,53 @@
 <?php
 $newmessage = $_POST;
+if (!empty($_FILES)) {
+	if($_FILES['file']['size']!=0){
+		$fileExtension = pathinfo(
+			$_FILES['file']['name'],
+			PATHINFO_EXTENSION
+			);
+		$filename = uniqid().'.'.$fileExtension;
+		$filePath = 'files/'.$filename;
+		move_uploaded_file( $_FILES['file']['tmp_name'], $filePath );
+		$newmessage['files']=$filename;
+	};
+};
 $messages = json_decode( file_get_contents( 'db.txt' ), true );
 $allmessages=($messages =='') ? [] : $messages;
+
 if(!empty($newmessage)){
- date_default_timezone_get("Europe/Kiev");
- $newmessage['time']=date("d-m-Y H:i:s");
- array_unshift( $allmessages, $newmessage );
- $res= file_put_contents('db.txt', json_encode( $allmessages));
-}
+	if ( strpos($newmessage['email'], '@') !==false) {
+		setcookie('name', $newmessage['name'], time()+(3600*24*7)); 
+		setcookie('email', $newmessage['email'], time()+(3600*24*7));
+		date_default_timezone_get("Europe/Kiev");
+		$newmessage['time']=date("d-m-Y H:i:s");
+		array_unshift( $allmessages, $newmessage );
+		$res= file_put_contents('db.txt', json_encode( $allmessages));
+		$_SESSION['notice'] = "Message has been saved successfuly";
+	};
+	if (  strpos($newmessage['email'], '@') ==false) {
+		$_SESSION['notice'] = "Неправильно введён email";
+	};
+	if( $newmessage['name'] != '' && $newmessage['email'] != '' && $newmessage['message'] != '' ) {
+		$name_message = $newmessage['name'];
+		$email_message = $newmessage['email'];
+		$mes_message = $newmessage['message'];
+		include "config.php";
+		mail($config['adminEmail'], 'mail',"Имя пользователя-$name_message
+			,email пользователя-$email_message
+			,cообщение пользователя-$mes_message");
+	};
+};
 if(
- isset($_SERVER['HTTP_X_REQUESTED_WITH']) 
- && !empty($_SERVER['HTTP_X_REQUESTED_WITH']) 
- && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
-) {
- echo json_encode( [ 'result' => (int)$res ] );
- exit;
+	isset($_SERVER['HTTP_X_REQUESTED_WITH']) 
+	&& !empty($_SERVER['HTTP_X_REQUESTED_WITH']) 
+	&& strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
+	) {
+	echo json_encode( [ 'result' => (int)$res ] );
+exit;
 }
+
 include "GuestBookView.php";
-
-
-
-
-
-
-
-
-
-
-
-
- // $Newmessage= $_POST;
-
-// $today = date("d-m-Y H:i:s", time()); 
-// $Newmessage['time']=$today;
-// // array_unshift ($Newmessage, $today);
-// var_dump ($Newmessage);
-
-// /*file_put_contents( 'db.txt', json_encode( $params) );*/
-
-// $messages = json_decode( file_get_contents( 'db.txt'), true );//  считуємо з файлу і потім переводимо в масив переводимм в строку
-// $allmessages=($messages =='') ? [] : $messages;
-// if(!empty($Newmessage)){
-
-// array_unshift( $allmessages, $Newmessage );//  до початку масиву парамс додаємо масив меседж Добавляет один или несколько элементов в начало массива $allmessages
-
-
-// file_put_contents( 'db.txt', json_encode( $allmessages) );// отримуємо повідомлення у вигляді масиву, переводимо в json і записуємо в файл  Пишет строку в файл
-// }
-// include "GuestBookView.php"; -->
-
-
-
-
-
-
- // define( 'DB_PATH', 'db.txt' );
-
-// $newMessage = $_POST;
- 
-// if( $newMessage['name'] != '' && $newMessage['email'] != '' && $newMessage['message'] != '' ) {
- 
-//  if( file_exists( DB_PATH ) ) { 
-//   $allMessages = json_decode ( file_get_contents( DB_PATH ), true );
-//   array_unshift( $allMessages, $newMessage );
-//  }
-//  else {
-//   $allMessages = [$newMessage];
-//  }
- 
-//  var_dump( $newMessage, $allMessages );
- 
-//  file_put_contents( DB_PATH, json_encode( $allMessages ) );
- 
- 
- 
-
-// }
-
-//  include "GuestBookView.php"; -->
-
 
 
 

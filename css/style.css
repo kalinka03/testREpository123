@@ -181,3 +181,6 @@ border-right: 1px solid #000;
   height: 25px;
   text-align: center;
 }
+.send-file {
+  padding: 20px;
+}
