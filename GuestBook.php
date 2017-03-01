@@ -12,6 +12,7 @@ if (!empty($_FILES)) {
 		$newmessage['files']=$filename;
 	};
 };
+include "config.php";
 $messages = json_decode( file_get_contents( 'db.txt' ), true );
 $allmessages=($messages =='') ? [] : $messages;
 
@@ -19,10 +20,10 @@ if(!empty($newmessage)){
 	if ( strpos($newmessage['email'], '@') !==false) {
 		setcookie('name', $newmessage['name'], time()+(3600*24*7)); 
 		setcookie('email', $newmessage['email'], time()+(3600*24*7));
-		date_default_timezone_get("Europe/Kiev");
 		$newmessage['time']=date("d-m-Y H:i:s");
+
 		array_unshift( $allmessages, $newmessage );
-		$res= file_put_contents('db.txt', json_encode( $allmessages));
+		$newmessage['result']= file_put_contents('db.txt', json_encode( $allmessages));
 		$_SESSION['notice'] = "Message has been saved successfuly";
 	};
 	if (  strpos($newmessage['email'], '@') ==false) {
@@ -32,18 +33,18 @@ if(!empty($newmessage)){
 		$name_message = $newmessage['name'];
 		$email_message = $newmessage['email'];
 		$mes_message = $newmessage['message'];
-		include "config.php";
-		mail($config['adminEmail'], 'mail',"Имя пользователя-$name_message
-			,email пользователя-$email_message
-			,cообщение пользователя-$mes_message");
+		mail($config['adminEmail'], 'mail',"Имя пользователя-$name_message,
+			email пользователя-$email_message,
+			cообщение пользователя-$mes_message");
 	};
 };
 if(
-	isset($_SERVER['HTTP_X_REQUESTED_WITH']) 
-	&& !empty($_SERVER['HTTP_X_REQUESTED_WITH']) 
-	&& strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
-	) {
-	echo json_encode( [ 'result' => (int)$res ] );
+ isset($_SERVER['HTTP_X_REQUESTED_WITH']) 
+ && !empty($_SERVER['HTTP_X_REQUESTED_WITH']) 
+ && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
+ ) {
+echo json_encode( [ 'message' => $newmessage ] );
+
 exit;
 }
 

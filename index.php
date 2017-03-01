@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set("Europe/Kiev");
 
 session_start();
  // повідомлення збережено
@@ -10,5 +11,6 @@ else {
 include "indexView.php";
 }
 unset( $_SESSION['notice'] );
+
 
 ?> 

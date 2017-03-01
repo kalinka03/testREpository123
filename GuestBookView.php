@@ -20,7 +20,7 @@
 ?>
 <script type="text/javascript">
 $(document).ready( function(e) { // Загрузка документа
-	
+
 	$('#guestForm').submit( function(e) {
 		e.preventDefault();
 		$.ajax({
@@ -31,18 +31,21 @@ $(document).ready( function(e) { // Загрузка документа
 				email: $('#email').val(),
 				message:  $('#message').val()
 			}
-			
 		}).done( function( data ) {
 
 			var res = JSON.parse( data );
-			if( res.result > 0 ) {
+			console.dir(res);
+			
+			if( res.message.result > 0 ) {
+				console.warn(res.message.result);
 				var el = document.createElement('tr');
+			
 				el.class = 'center1';
 				$(el).html(
-					'<td class="center1">' + $('#name').val() + '</td> ' +
-					'<td class="center1">' + $('#name').val() + '</td> ' +
-					'<td class="center1">' + $('#email').val() + '</td> ' +
-					'<td class="center1"> ' + $('#message').val() + '</td> ');
+					'<td class="center1">' + res.message['time'] + '</td> ' +
+					'<td class="center1">' + res.message['name'] + '</td> ' +
+					'<td class="center1">' + res.message['email'] + '</td> ' +
+					'<td class="center1"> ' + res.message['message'] + '</td> ');
 				$('.messages').prepend(el);
 			}    
 		});
@@ -67,9 +70,9 @@ $(document).ready( function(e) { // Загрузка документа
 			</a>
 			<?php } ?> 
 		</td>  
-		
+
 	</tr>
-	
+
 	<?php } ?>
 
 </table>

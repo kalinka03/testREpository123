@@ -35,10 +35,6 @@
 							<a class="next" href="#">Каталог</a>	
 							<a class="next" href="#">Контакты</a>
 						</div>
-
-
-
-
 					</div>
 				</div>
 			</div>
@@ -73,26 +69,41 @@
 						</div>
 
 					</div>
-					
-
-
-				</div>
+					</div>
 				<div class="container">
 					<div class="row">
 						<div class="col-sm-2 col-xs-12">
 						</div>
 						<div class="col-sm-5 col-xs-12">
-							<form  method="post"  class="form-horizontal" action=GuestBook.php method=post enctype=multipart/form-data>
+							<form  method="post"  class="form-horizontal" action=guestbook method=post enctype=multipart/form-data>
 								
 								<div class="form-group">
 									<div class="col-xs-9 col-xs-12 weigth-tab">
 										
 
-										<input name='name' type="text" class="form-control"  placeholder="Ваше Имя" value="<?php echo $_COOKIE['name'] ?>">
+										<input name='name' type="text" class="form-control"  placeholder="Ваше Имя" 
+
+										      <?php 
+										       if(!empty($_COOKIE['name'])){
+										        $newName = $_COOKIE['name'];
+										        ?>
+										        value="<?php echo $newName ?>"> 
+										        <?php
+										       }
+										       ?>
 									</div>
 									<div class="form-group">
 										<div class="col-xs-9 col-xs-12 weigth-tab">
-											<input  name='email' type="text" class="form-control"  placeholder="Ваше email" value="<?php echo $_COOKIE['email'] ?>">
+											<input  name='email' type="text" class="form-control"  placeholder="Ваше email" 
+
+ 												 <?php 
+										       if(!empty($_COOKIE['email'])){
+										        $newEmail = $_COOKIE['email'];
+										        ?>
+										        value="<?php echo $newEmail ?>"> 
+										        <?php
+										       }
+										       ?>
 										</div>
 									</div>
 
